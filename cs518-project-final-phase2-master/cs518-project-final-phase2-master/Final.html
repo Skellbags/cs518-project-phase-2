@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="simple.css"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<style>
+  button {
+    margin-left: 150px;
+  }
+  img {
+    margin-left: 5px;
+    margin-right: 75px;
+    height:350px;
+
+  }
+</style>
+<body>
+<div id="wrapper">
+  <header>
+    <h1><strong>CS 518 Final Project</strong></h1>
+  </header>
+  <nav style="color:#00DEEA;">By Ryan Skelly, Riley Mularien, Ramya Amin</nav>
+</div>
+<main>
+  <img src="software1.png" alt="Software">
+
+
+  <label for="authorname" style="margin-left: 50px;";>Author:</label>
+  <input type="text" id="authorname"><br><br>
+  <button id="search" onclick="fetchquote()"> Click to see Quote and Author</button>
+
+
+
+  <div id="display"></div>
+
+
+  <script>
+    //var api = "phase1-c4-eus-dev-cs518-phase1-azure.azurewebsites.net/api/author=?";
+    const btn = document.getElementById('search');
+
+    //btn.addEventListener('click', () => {
+    async function fetchquote() {
+      var api = "https://phase2final.azurewebsites.net/quote?author=";
+      var author = document.getElementsByTagName('input')[0].value;
+      var url = api + author;
+
+      const displayDiv = document.getElementById('display');
+      const response = await fetch(url);
+      const data = (await response.json())
+
+
+      if (response.status === 400 || response.status === 500){
+        displayDiv.innerHTML += `<h5>"${data.message}"</h5>`;
+          }
+      else {
+        displayDiv.innerHTML += `<h5>Quote:"${data.quote}"</h5><h6>Author:"${data.author}"</h6>`;
+
+          }
+
+    }
+  </script>
+</main>
+</body>
+</html>

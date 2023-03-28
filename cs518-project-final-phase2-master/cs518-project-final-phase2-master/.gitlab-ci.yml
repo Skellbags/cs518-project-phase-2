@@ -1,0 +1,36 @@
+image: alpine:latest
+
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  image: openjdk:17
+  before_script:
+    - chmod +x mvnw
+  script:
+    - ./mvnw package spring-boot:repackage
+  artifacts:
+    paths:
+      - target/motivate-1.0.0.jar
+    expire_in: 1 hour
+  only:
+    - master
+  tags:
+    - cs-518-7
+
+deploy:
+  stage: deploy
+  image: mcr.microsoft.com/azure-cli
+  before_script:
+    - az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
+    - az account set --subscription $AZURE_SUBSCRIPTION_ID
+  script:
+    - az acr build --registry $AZURE_ACR_REGISTRY --image cs518-phase2 .
+  dependencies:
+    - build
+  only:
+    - master
+  tags:
+    - cs-518-7

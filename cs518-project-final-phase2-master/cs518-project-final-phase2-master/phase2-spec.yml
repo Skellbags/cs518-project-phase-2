@@ -1,0 +1,51 @@
+openapi: 3.0.3
+info:
+  title: CS 518 SWE Lab Project Phase 2 API
+  description: The API requiring implementation for phase 2 of the CS 518 SWE lab project.
+  license:
+    name: All rights reserved.
+  version: 1.0.0
+components:
+  schemas:
+    Exception:
+      type: object
+      properties:
+        message:
+          type: string
+    Quote:
+      type: object
+      properties:
+        author:
+          type: string
+        quote:
+          type: string
+paths:
+  /quote:
+    parameters:
+      - in: path
+        name: author
+        description: the author of the random quote
+        required: false
+        schema:
+          type: string
+    get:
+      description: gets random quote from random author
+      responses:
+        '200':
+          description: random quote has been selected and returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Quote'
+        '400':
+          description: no quotes could be found for specified author
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+        '500':
+          description: no quotes have been loaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
